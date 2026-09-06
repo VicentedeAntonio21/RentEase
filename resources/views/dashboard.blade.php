@@ -10,6 +10,11 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
+                    @if (auth()->user()->isOwner())
+                        <a href="{{ route('owner.properties.index') }}" class="text-blue-600 underline">
+                            Manage My Properties
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>
