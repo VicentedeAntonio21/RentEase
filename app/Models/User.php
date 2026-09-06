@@ -48,6 +48,16 @@ class User extends Authenticatable
         ];
     }
 
+    public function properties(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Property::class, 'owner_id');
+    }
+
+    public function applications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Application::class, 'tenant_id');
+    }
+    
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
