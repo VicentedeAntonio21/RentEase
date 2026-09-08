@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ApplicationController as AdminApplicationControll
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Owner\ReportController;
 
 Route::get('/', [ListingController::class, 'index'])->name('home');
 
@@ -35,17 +36,17 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->grou
     Route::get('/applications', [ApplicationController::class, 'received'])->name('applications.received');
     Route::patch('/applications/{application}/approve', [ApplicationController::class, 'approve'])->name('applications.approve');
     Route::patch('/applications/{application}/reject', [ApplicationController::class, 'reject'])->name('applications.reject');
+    Route::resource('properties', PropertyController::class);
+    Route::resource('properties.units', UnitController::class)->shallow();
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
-
     Route::get('/properties', [AdminPropertyController::class, 'index'])->name('properties.index');
     Route::delete('/properties/{property}', [AdminPropertyController::class, 'destroy'])->name('properties.destroy');
-
     Route::get('/applications', [AdminApplicationController::class, 'index'])->name('applications.index');
 });
 

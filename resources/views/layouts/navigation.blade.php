@@ -32,6 +32,10 @@
                                 :active="request()->routeIs('owner.applications.received')">
                                 {{ __('Applications') }}
                             </x-nav-link>
+
+                            <x-nav-link :href="route('owner.reports')" :active="request()->routeIs('owner.reports')">
+                                {{ __('Reports') }}
+                            </x-nav-link>
                         @endif
 
                         @if (auth()->user()->isAdmin())
@@ -111,7 +115,8 @@
 
             @auth
                 @if (auth()->user()->isTenant())
-                    <x-responsive-nav-link :href="route('applications.index')" :active="request()->routeIs('applications.index')">
+                    <x-responsive-nav-link :href="route('applications.index')"
+                        :active="request()->routeIs('applications.index')">
                         {{ __('My Applications') }}
                     </x-responsive-nav-link>
                 @endif
@@ -120,6 +125,10 @@
                     <x-responsive-nav-link :href="route('owner.applications.received')"
                         :active="request()->routeIs('owner.applications.received')">
                         {{ __('Applications') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('owner.reports')" :active="request()->routeIs('owner.reports')">
+                        {{ __('Reports') }}
                     </x-responsive-nav-link>
                 @endif
 
@@ -149,7 +158,7 @@
                         @csrf
 
                         <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
-                                                                this.closest('form').submit();">
+                                                                        this.closest('form').submit();">
                             {{ __('Log Out') }}
                         </x-responsive-nav-link>
                     </form>
