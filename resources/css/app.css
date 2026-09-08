@@ -5,3 +5,8 @@
 [x-cloak] {
     display: none !important;
 }
+
+nav[role="navigation"] a,
+nav[role="navigation"] span {
+    @apply dark:text-gray-300;
+}
