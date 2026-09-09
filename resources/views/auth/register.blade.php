@@ -1,61 +1,67 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <div class="mb-6">
+        <h2 class="font-heading text-2xl font-bold">Create your account</h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Join RentEase as a renter or property owner</p>
+    </div>
+
+    <form method="POST" action="{{ route('register') }}" class="space-y-5">
         @csrf
 
-        <!-- Name -->
+        <x-form-input name="name" label="Full Name" icon="ri-user-line" required autofocus />
+        <x-form-input name="email" label="Email" type="email" icon="ri-mail-line" required />
+
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
-                autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+            <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    <i class="ri-lock-line"></i>
+                </span>
+                <input type="password" id="password" name="password" required
+                       class="w-full rounded-lg border-gray-200 dark:border-white/10 dark:bg-[#1E2235] dark:text-white text-sm focus:ring-primary focus:border-primary pl-10">
+            </div>
+            @error('password') <p class="mt-1 text-xs text-danger">{{ $message }}</p> @enderror
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
-                autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div>
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
+            <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                    <i class="ri-lock-line"></i>
+                </span>
+                <input type="password" id="password_confirmation" name="password_confirmation" required
+                       class="w-full rounded-lg border-gray-200 dark:border-white/10 dark:bg-[#1E2235] dark:text-white text-sm focus:ring-primary focus:border-primary pl-10">
+            </div>
+            @error('password_confirmation') <p class="mt-1 text-xs text-danger">{{ $message }}</p> @enderror
         </div>
 
         <!-- Role -->
         <div>
-            <x-input-label for="role" :value="__('I am a')" />
-            <select id="role" name="role" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
-                <option value="tenant">Tenant (Looking to rent)</option>
-                <option value="owner">Property Owner</option>
-            </select>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">I am a</label>
+            <div class="grid grid-cols-2 gap-3">
+                <label class="relative flex items-center gap-2 border border-gray-200 dark:border-white/10 rounded-lg p-3 cursor-pointer has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                    <input type="radio" name="role" value="tenant" checked class="text-primary focus:ring-primary">
+                    <span class="flex items-center gap-2 text-sm">
+                        <i class="ri-user-search-line text-primary"></i> Tenant
+                    </span>
+                </label>
+                <label class="relative flex items-center gap-2 border border-gray-200 dark:border-white/10 rounded-lg p-3 cursor-pointer has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                    <input type="radio" name="role" value="owner" class="text-primary focus:ring-primary">
+                    <span class="flex items-center gap-2 text-sm">
+                        <i class="ri-building-4-line text-primary"></i> Property Owner
+                    </span>
+                </label>
+            </div>
+            @error('role') <p class="mt-1 text-xs text-danger">{{ $message }}</p> @enderror
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+        <button type="submit"
+                class="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark">
+            Create Account
+        </button>
     </form>
+
+    <p class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+        Already have an account?
+        <a href="{{ route('login') }}" class="text-primary font-medium hover:underline">Log in</a>
+    </p>
 </x-guest-layout>
