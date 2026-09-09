@@ -4,7 +4,7 @@
     <div class="max-w-4xl mx-auto space-y-6">
 
         <!-- Back link -->
-        <a href="{{ url()->previous() === url()->current() ? route('home') : url()->previous() }}"
+        <a href="{{ url()->previous() === url()->current() ? route('listings.index') : url()->previous() }}"
            class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary">
             <i class="ri-arrow-left-line"></i> Back to listings
         </a>

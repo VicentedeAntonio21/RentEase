@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -16,14 +17,15 @@
     <title>{{ config('app.name', 'RentEase') }} — @yield('title', 'Dashboard')</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body
-    class="font-sans antialiased bg-gray-50 dark:bg-[#1E2235] text-gray-800 dark:text-gray-200"
-    x-data="{
+
+<body class="font-sans antialiased bg-gray-50 dark:bg-[#1E2235] text-gray-800 dark:text-gray-200" x-data="{
         mobileOpen: false,
         collapsed: localStorage.getItem('sidebarCollapsed') === 'true',
         toggleSidebar() {
@@ -37,8 +39,7 @@
     }">
 
     <!-- Sidebar (fixed, pinned to viewport) -->
-    <aside
-        :class="[
+    <aside :class="[
             mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
             collapsed ? 'lg:w-20' : 'lg:w-64'
         ]"
@@ -50,48 +51,62 @@
         </div>
 
         <nav class="px-3 py-4 space-y-1">
-            <x-sidebar-link href="{{ route('home') }}" icon="ri-search-line" :active="request()->routeIs('home')">
+            <x-sidebar-link href="{{ route('listings.index') }}" icon="ri-search-line"
+                :active="request()->routeIs('listings.*')">
                 Browse Listings
             </x-sidebar-link>
 
-            <x-sidebar-link href="{{ route('dashboard') }}" icon="ri-dashboard-line" :active="request()->routeIs('dashboard')">
+            <x-sidebar-link href="{{ route('dashboard') }}" icon="ri-dashboard-line"
+                :active="request()->routeIs('dashboard')">
                 Dashboard
             </x-sidebar-link>
 
             @auth
                 @if (auth()->user()->isTenant())
-                    <x-sidebar-link href="{{ route('applications.index') }}" icon="ri-file-list-3-line" :active="request()->routeIs('applications.index')">
+                    <x-sidebar-link href="{{ route('applications.index') }}" icon="ri-file-list-3-line"
+                        :active="request()->routeIs('applications.index')">
                         My Applications
                     </x-sidebar-link>
                 @endif
 
                 @if (auth()->user()->isOwner())
-                    <p x-show="!collapsed" class="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 whitespace-nowrap">Owner</p>
+                    <p x-show="!collapsed"
+                        class="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 whitespace-nowrap">
+                        Owner</p>
 
-                    <x-sidebar-link href="{{ route('owner.properties.index') }}" icon="ri-building-4-line" :active="request()->routeIs('owner.properties.*')">
+                    <x-sidebar-link href="{{ route('owner.properties.index') }}" icon="ri-building-4-line"
+                        :active="request()->routeIs('owner.properties.*')">
                         My Properties
                     </x-sidebar-link>
-                    <x-sidebar-link href="{{ route('owner.applications.received') }}" icon="ri-inbox-archive-line" :active="request()->routeIs('owner.applications.received')">
+                    <x-sidebar-link href="{{ route('owner.applications.received') }}" icon="ri-inbox-archive-line"
+                        :active="request()->routeIs('owner.applications.received')">
                         Applications
                     </x-sidebar-link>
-                    <x-sidebar-link href="{{ route('owner.reports') }}" icon="ri-bar-chart-2-line" :active="request()->routeIs('owner.reports')">
+                    <x-sidebar-link href="{{ route('owner.reports') }}" icon="ri-bar-chart-2-line"
+                        :active="request()->routeIs('owner.reports')">
                         Reports
                     </x-sidebar-link>
                 @endif
 
                 @if (auth()->user()->isAdmin())
-                    <p x-show="!collapsed" class="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 whitespace-nowrap">Admin</p>
+                    <p x-show="!collapsed"
+                        class="px-3 pt-4 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 whitespace-nowrap">
+                        Admin</p>
 
-                    <x-sidebar-link href="{{ route('admin.dashboard') }}" icon="ri-shield-star-line" :active="request()->routeIs('admin.dashboard')">
+                    <x-sidebar-link href="{{ route('admin.dashboard') }}" icon="ri-shield-star-line"
+                        :active="request()->routeIs('admin.dashboard')">
                         Overview
                     </x-sidebar-link>
-                    <x-sidebar-link href="{{ route('admin.users.index') }}" icon="ri-team-line" :active="request()->routeIs('admin.users.*')">
+                    <x-sidebar-link href="{{ route('admin.users.index') }}" icon="ri-team-line"
+                        :active="request()->routeIs('admin.users.*')">
                         Users
                     </x-sidebar-link>
-                    <x-sidebar-link href="{{ route('admin.properties.index') }}" icon="ri-building-line" :active="request()->routeIs('admin.properties.*')">
+                    <x-sidebar-link href="{{ route('admin.properties.index') }}" icon="ri-building-line"
+                        :active="request()->routeIs('admin.properties.*')">
                         Properties
                     </x-sidebar-link>
-                    <x-sidebar-link href="{{ route('admin.applications.index') }}" icon="ri-file-list-line" :active="request()->routeIs('admin.applications.*')">
+                    <x-sidebar-link href="{{ route('admin.applications.index') }}" icon="ri-file-list-line"
+                        :active="request()->routeIs('admin.applications.*')">
                         Applications
                     </x-sidebar-link>
                 @endif
@@ -100,15 +115,10 @@
     </aside>
 
     <!-- Mobile overlay -->
-    <div
-        x-show="mobileOpen"
-        x-cloak
-        @click="mobileOpen = false"
-        class="fixed inset-0 z-30 bg-black/40 lg:hidden"></div>
+    <div x-show="mobileOpen" x-cloak @click="mobileOpen = false" class="fixed inset-0 z-30 bg-black/40 lg:hidden"></div>
 
     <!-- Topbar -->
-    <header
-        :class="collapsed ? 'lg:left-20' : 'lg:left-64'"
+    <header :class="collapsed ? 'lg:left-20' : 'lg:left-64'"
         class="fixed top-0 left-0 right-0 z-20 h-16 bg-white dark:bg-[#252B3E] border-b border-gray-200 dark:border-white/10 flex items-center justify-between px-4 lg:px-6 transition-all duration-200 ease-in-out">
 
         <div class="flex items-center gap-3">
@@ -121,8 +131,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button
-                @click="
+            <button @click="
                     document.documentElement.classList.toggle('dark');
                     localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
                 "
@@ -135,7 +144,8 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="flex items-center gap-2 text-sm font-medium">
-                            <span class="w-8 h-8 rounded-full bg-primary-light dark:bg-primary/20 text-primary flex items-center justify-center font-heading font-semibold">
+                            <span
+                                class="w-8 h-8 rounded-full bg-primary-light dark:bg-primary/20 text-primary flex items-center justify-center font-heading font-semibold">
                                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                             </span>
                             <span class="hidden sm:inline">{{ Auth::user()->name }}</span>
@@ -155,14 +165,14 @@
                 </x-dropdown>
             @else
                 <a href="{{ route('login') }}" class="text-sm font-medium text-gray-600 dark:text-gray-300">Log in</a>
-                <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:bg-primary-dark">Register</a>
+                <a href="{{ route('register') }}"
+                    class="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:bg-primary-dark">Register</a>
             @endauth
         </div>
     </header>
 
     <!-- Page content -->
-    <main
-        :class="collapsed ? 'lg:ml-20' : 'lg:ml-64'"
+    <main :class="collapsed ? 'lg:ml-20' : 'lg:ml-64'"
         class="pt-16 min-h-screen transition-all duration-200 ease-in-out">
         <div class="p-4 lg:p-6">
             {{ $slot }}
@@ -171,4 +181,5 @@
 
     @stack('scripts')
 </body>
+
 </html>

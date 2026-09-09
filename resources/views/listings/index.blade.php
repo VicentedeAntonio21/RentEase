@@ -5,7 +5,7 @@
 
         <!-- Search / Filter Bar -->
         <div class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-5">
-            <form method="GET" action="{{ route('home') }}" class="grid grid-cols-2 md:grid-cols-6 gap-3">
+            <form method="GET" action="{{ route('listings.index') }}" class="grid grid-cols-2 md:grid-cols-6 gap-3">
 
                 <div class="col-span-2 md:col-span-1">
                     <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">City</label>
@@ -73,7 +73,7 @@
                 <div class="col-span-full text-center py-16">
                     <i class="ri-home-search-line text-5xl text-gray-300 dark:text-gray-600"></i>
                     <p class="mt-3 text-gray-500 dark:text-gray-400">No available units match your search.</p>
-                    <a href="{{ route('home') }}" class="inline-block mt-2 text-primary text-sm font-medium">Clear filters</a>
+                    <a href="{{ route('listings.index') }}" class="inline-block mt-2 text-primary text-sm font-medium">Clear filters</a>
                 </div>
             @endforelse
         </div>

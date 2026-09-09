@@ -11,8 +11,11 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Owner\ReportController;
+use App\Http\Controllers\WelcomeController;
 
-Route::get('/', [ListingController::class, 'index'])->name('home');
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
+Route::get('/listings', [ListingController::class, 'index'])->name('listings.index');
+Route::get('/listings/{unit}', [ListingController::class, 'show'])->name('listings.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -27,8 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::patch('/applications/{application}/cancel', [ApplicationController::class, 'cancel'])->name('applications.cancel');
 });
-
-Route::get('/listings/{unit}', [ListingController::class, 'show'])->name('listings.show');
 
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
     Route::resource('properties', PropertyController::class);
