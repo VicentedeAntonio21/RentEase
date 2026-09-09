@@ -1,39 +1,45 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Manage Properties</h2>
-    </x-slot>
+    @section('title', 'Manage Properties')
 
-    <div class="py-8">
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 space-y-4">
+    <div class="space-y-6">
 
-            @if (session('success'))
-                <div class="p-4 bg-green-100 text-green-700 rounded">{{ session('success') }}</div>
-            @endif
+        @if (session('success'))
+            <div class="flex items-center gap-2 p-4 bg-success/10 text-success rounded-lg text-sm">
+                <i class="ri-checkbox-circle-line text-lg"></i> {{ session('success') }}
+            </div>
+        @endif
 
-            <div class="bg-white shadow rounded-lg divide-y">
-                @foreach ($properties as $property)
-                    <div class="p-4 flex justify-between items-center">
-                        <div>
-                            <p class="font-semibold">{{ $property->title }}</p>
-                            <p class="text-sm text-gray-500">
+        <div class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 divide-y divide-gray-100 dark:divide-white/5">
+            @foreach ($properties as $property)
+                <div class="p-5 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                            <i class="ri-building-4-line"></i>
+                        </span>
+                        <div class="min-w-0">
+                            <p class="font-medium truncate">{{ $property->title }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
                                 Owner: {{ $property->owner->name }} ({{ $property->owner->email }})
                             </p>
-                            <p class="text-sm text-gray-500">
-                                {{ $property->address }}, {{ $property->city }} &middot;
-                                {{ $property->units->count() }} unit(s)
+                            <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-0.5">
+                                <i class="ri-map-pin-line"></i> {{ $property->address }}, {{ $property->city }} &middot;
+                                {{ $property->units->count() }} {{ Str::plural('unit', $property->units->count()) }}
                             </p>
                         </div>
-                        <form action="{{ route('admin.properties.destroy', $property) }}" method="POST"
-                              onsubmit="return confirm('Delete this property and all its units/applications?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="px-3 py-1 text-sm bg-red-600 text-white rounded">Remove</button>
-                        </form>
                     </div>
-                @endforeach
-            </div>
-
-            {{ $properties->links() }}
+                    <form action="{{ route('admin.properties.destroy', $property) }}" method="POST"
+                          onsubmit="return confirm('Delete this property and all its units/applications?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="px-3 py-1.5 text-sm font-medium border border-danger/20 rounded-lg text-danger hover:bg-danger/10 shrink-0">
+                            Remove
+                        </button>
+                    </form>
+                </div>
+            @endforeach
         </div>
+
+        {{ $properties->links() }}
     </div>
 </x-app-layout>
