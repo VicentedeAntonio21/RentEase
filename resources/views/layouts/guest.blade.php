@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <script>
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -16,20 +17,27 @@
     <title>{{ config('app.name', 'RentEase') }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="font-sans antialiased bg-gray-50 dark:bg-[#1E2235] text-gray-800 dark:text-gray-200">
 
     <div class="min-h-screen flex">
 
         <!-- Left: brand panel (hidden on small screens) -->
-        <div class="hidden lg:flex lg:w-1/2 bg-sidebar text-white flex-col justify-between p-12 relative overflow-hidden">
+        <div
+            class="hidden lg:flex lg:w-1/2 bg-sidebar text-white flex-col justify-between p-12 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-[0.03]"
+                style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 24px 24px;">
+            </div>
             <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-primary/20"></div>
             <div class="absolute -right-10 bottom-0 w-64 h-64 rounded-full bg-primary/10"></div>
-
+            <div class="absolute left-1/4 top-1/3 w-40 h-40 rounded-full bg-primary/10 blur-2xl"></div>
             <div class="relative flex items-center gap-2">
                 <i class="ri-home-4-fill text-primary text-3xl"></i>
                 <span class="font-heading font-bold text-xl">RentEase</span>
@@ -40,13 +48,17 @@
                     Find your next home,<br>or manage the ones you own.
                 </h1>
                 <p class="mt-4 text-gray-300 max-w-sm">
-                    RentEase brings property owners and renters together — browse listings, apply online, and track everything in one place.
+                    RentEase brings property owners and renters together — browse listings, apply online, and track
+                    everything in one place.
                 </p>
 
                 <div class="flex gap-6 mt-8 text-sm text-gray-300">
-                    <div class="flex items-center gap-2"><i class="ri-search-line text-primary"></i> Browse listings</div>
-                    <div class="flex items-center gap-2"><i class="ri-file-list-3-line text-primary"></i> Apply online</div>
-                    <div class="flex items-center gap-2"><i class="ri-bar-chart-2-line text-primary"></i> Track occupancy</div>
+                    <div class="flex items-center gap-2"><i class="ri-search-line text-primary"></i> Browse listings
+                    </div>
+                    <div class="flex items-center gap-2"><i class="ri-file-list-3-line text-primary"></i> Apply online
+                    </div>
+                    <div class="flex items-center gap-2"><i class="ri-bar-chart-2-line text-primary"></i> Track
+                        occupancy</div>
                 </div>
             </div>
 
@@ -57,9 +69,7 @@
         <div class="flex-1 flex flex-col items-center justify-center p-6 relative">
 
             <!-- Dark mode toggle -->
-            <button
-                x-data
-                @click="
+            <button x-data @click="
                     document.documentElement.classList.toggle('dark');
                     localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
                 "
@@ -81,4 +91,5 @@
     </div>
 
 </body>
+
 </html>

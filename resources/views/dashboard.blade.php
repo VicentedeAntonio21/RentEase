@@ -18,7 +18,7 @@
                     <i class="ri-search-line"></i> Browse Listings
                 </a>
             @elseif (auth()->user()->isOwner())
-                <a href="{{ route('owner.properties.create') }}"
+                <a href="{{ route('owner.properties.index') }}" class="... animate-fade-in-up">
                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-primary rounded-lg font-medium text-sm hover:bg-white/90 w-fit">
                     <i class="ri-add-line"></i> Add Property
                 </a>
@@ -59,7 +59,7 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">Manage listings & units</p>
                     </div>
                 </a>
-                <a href="{{ route('owner.applications.received') }}" class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+                <a href="{{ route('owner.applications.received') }}" class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-5 flex items-center gap-4 hover:shadow-md transition-shadow animate-fade-in-up animate-delay-1">
                     <div class="w-12 h-12 rounded-full bg-warning/10 text-warning flex items-center justify-center">
                         <i class="ri-inbox-archive-line text-2xl"></i>
                     </div>
@@ -68,7 +68,7 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">Review tenant requests</p>
                     </div>
                 </a>
-                <a href="{{ route('owner.reports') }}" class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
+                <a href="{{ route('owner.reports') }}" class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-5 flex items-center gap-4 hover:shadow-md transition-shadow animate-fade-in-up animate-delay-2">
                     <div class="w-12 h-12 rounded-full bg-success/10 text-success flex items-center justify-center">
                         <i class="ri-bar-chart-2-line text-2xl"></i>
                     </div>

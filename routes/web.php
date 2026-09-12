@@ -14,6 +14,7 @@ use App\Http\Controllers\Owner\ReportController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\ChatController;
 
+
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::get('/listings', [ListingController::class, 'index'])->name('listings.index');
 Route::get('/listings/{unit}', [ListingController::class, 'show'])->name('listings.show');
