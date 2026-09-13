@@ -61,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Application::class, 'tenant_id');
     }
-    
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
@@ -75,5 +75,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isTenant(): bool
     {
         return $this->role === 'tenant';
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->verification_status === 'verified';
+    }
+
+    public function verificationPending(): bool
+    {
+        return $this->verification_status === 'pending';
+    }
+
+    public function needsVerificationDocs(): bool
+    {
+        return in_array($this->verification_status, ['unverified', 'rejected']);
     }
 }

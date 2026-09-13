@@ -102,7 +102,12 @@
                     {{ strtoupper(substr($unit->property->owner->name, 0, 1)) }}
                 </span>
                 <div>
-                    <p class="text-sm font-medium">{{ $unit->property->owner->name }}</p>
+                    <p class="text-sm font-medium flex items-center gap-1">
+                        {{ $unit->property->owner->name }}
+                        @if ($unit->property->owner->isVerified())
+                            <i class="ri-verified-badge-fill text-primary text-sm" title="Verified owner"></i>
+                        @endif
+                    </p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Property Owner</p>
                 </div>
             </div>

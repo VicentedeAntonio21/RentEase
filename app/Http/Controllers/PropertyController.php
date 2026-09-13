@@ -21,11 +21,19 @@ class PropertyController extends Controller
 
     public function create()
     {
+        if (!Auth::user()->isVerified()) {
+            return redirect()
+                ->route('owner.properties.index')
+                ->with('error', $this->verificationMessage());
+        }
+
         return view('owner.properties.create');
     }
 
     public function store(StorePropertyRequest $request)
     {
+        abort_unless(Auth::user()->isVerified(), 403, $this->verificationMessage());
+
         $property = Auth::user()->properties()->create($request->validated());
 
         if ($request->hasFile('images')) {
@@ -86,4 +94,11 @@ class PropertyController extends Controller
             ->route('owner.properties.index')
             ->with('success', 'Property deleted.');
     }
+
+    private function verificationMessage(): string
+{
+    return Auth::user()->needsVerificationDocs()
+        ? 'Please submit your verification documents before adding properties.'
+        : 'Your account is pending admin approval. Please wait at least 24 hours before adding properties.';
+}
 }

@@ -30,6 +30,14 @@ class ApplicationController extends Controller
         abort_if(!Auth::user()->isTenant(), 403, 'Only tenants can apply.');
         abort_if($unit->status !== 'available', 403, 'This unit is not available.');
 
+        if (!Auth::user()->isVerified()) {
+            return redirect()
+                ->route('listings.show', $unit)
+                ->with('error', Auth::user()->needsVerificationDocs()
+                    ? 'Please submit your verification documents before applying.'
+                    : 'Your account is pending admin approval. Please wait at least 24 hours before applying.');
+        }
+
         return view('applications.create', compact('unit'));
     }
 
@@ -55,11 +63,13 @@ class ApplicationController extends Controller
             'message' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        Auth::user()->applications()->create([
+        $application = Auth::user()->applications()->create([
             'unit_id' => $unit->id,
             'status' => 'pending',
             ...$validated,
         ]);
+
+        $unit->property->owner->notify(new \App\Notifications\NewApplicationReceived($application));
 
         return redirect()
             ->route('applications.index')
@@ -103,11 +113,12 @@ class ApplicationController extends Controller
         $application->update(['status' => 'approved']);
         $application->unit->update(['status' => 'occupied']);
 
-        // Auto-reject other pending applications for the same unit
         Application::where('unit_id', $application->unit_id)
             ->where('id', '!=', $application->id)
             ->where('status', 'pending')
             ->update(['status' => 'rejected']);
+
+        $application->tenant->notify(new \App\Notifications\ApplicationStatusUpdated($application));
 
         return back()->with('success', 'Application approved. Unit marked as occupied.');
     }
@@ -120,6 +131,8 @@ class ApplicationController extends Controller
         $this->authorize('manage', $application);
 
         $application->update(['status' => 'rejected']);
+
+        $application->tenant->notify(new \App\Notifications\ApplicationStatusUpdated($application));
 
         return back()->with('success', 'Application rejected.');
     }

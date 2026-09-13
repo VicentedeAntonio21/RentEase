@@ -1,24 +1,28 @@
 <a href="{{ route('listings.show', $unit) }}"
-   class="group bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden hover:shadow-md transition-shadow">
+    class="group bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden hover:shadow-md transition-shadow">
 
     <div class="relative h-44 bg-gray-100 dark:bg-white/5">
         @if ($unit->property->images->count())
             <img src="{{ rtrim(request()->getBasePath(), '/') . '/storage/' . ltrim($unit->property->images->first()->image_path, '/') }}"
-                 class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300">
+                class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300">
         @else
             <div class="h-full w-full flex items-center justify-center text-gray-300 dark:text-gray-600">
                 <i class="ri-image-line text-4xl"></i>
             </div>
         @endif
 
-        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium bg-white/95 dark:bg-[#1E2235]/95 text-gray-700 dark:text-gray-200 capitalize">
+        <span
+            class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium bg-white/95 dark:bg-[#1E2235]/95 text-gray-700 dark:text-gray-200 capitalize">
             {{ $unit->property->property_type }}
         </span>
     </div>
 
     <div class="p-4">
-        <p class="font-heading font-semibold text-gray-800 dark:text-white truncate">
+        <p class="font-heading font-semibold text-gray-800 dark:text-white truncate flex items-center gap-1">
             {{ $unit->property->title }} — {{ $unit->unit_name }}
+            @if ($unit->property->owner->isVerified())
+                <i class="ri-verified-badge-fill text-primary text-sm" title="Verified owner"></i>
+            @endif
         </p>
         <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-0.5">
             <i class="ri-map-pin-line"></i> {{ $unit->property->city }}

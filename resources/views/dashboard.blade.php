@@ -13,8 +13,42 @@
                 </p>
             </div>
 
+            @if (auth()->user()->needsVerificationDocs() && !auth()->user()->isAdmin())
+                <div class="flex items-center justify-between gap-4 p-4 bg-warning/10 border border-warning/20 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <i class="ri-shield-user-line text-2xl text-warning"></i>
+                        <div>
+                            <p class="font-medium text-sm">Verify your identity</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                @if (auth()->user()->isOwner())
+                                    Upload your ID and proof of ownership to start listing properties.
+                                @else
+                                    Upload your ID to start applying for rentals.
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                    <a href="{{ route('verification.edit') }}"
+                        class="shrink-0 px-4 py-2 bg-warning text-white rounded-lg text-sm font-medium hover:bg-yellow-600">
+                        Upload Now
+                    </a>
+                </div>
+            @elseif (auth()->user()->verificationPending())
+                <div class="flex items-center gap-3 p-4 bg-primary/10 border border-primary/20 rounded-xl">
+                    <i class="ri-time-line text-2xl text-primary"></i>
+                    <p class="text-sm">
+                        <span class="font-medium">Verification pending.</span>
+                        Please wait at least 24 hours for admin approval.
+                    </p>
+                </div>
+            @elseif (auth()->user()->isVerified())
+                <div class="flex items-center gap-2 text-sm text-success">
+                    <i class="ri-shield-check-line"></i> Your account is verified.
+                </div>
+            @endif
+
             @if (auth()->user()->isTenant())
-                <a href="{{ route('home') }}"
+                <a href="{{ route('listings.index') }}"
                     class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-primary rounded-lg font-medium text-sm hover:bg-white/90 w-fit">
                     <i class="ri-search-line"></i> Browse Listings
                 </a>
@@ -28,7 +62,7 @@
 
         @if (auth()->user()->isTenant())
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <a href="{{ route('home') }}"
+                <a href="{{ route('listings.index') }}"
                     class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">
                     <div class="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
                         <i class="ri-search-line text-2xl"></i>

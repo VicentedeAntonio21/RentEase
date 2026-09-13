@@ -110,6 +110,10 @@
                         :active="request()->routeIs('admin.applications.*')">
                         Applications
                     </x-sidebar-link>
+                    <x-sidebar-link href="{{ route('admin.verifications.index') }}" icon="ri-shield-user-line"
+                        :active="request()->routeIs('admin.verifications.*')">
+                        Verifications
+                    </x-sidebar-link>
                 @endif
             @endauth
         </nav>
@@ -132,6 +136,66 @@
         </div>
 
         <div class="flex items-center gap-4">
+            <!-- Tailwind safelist: bg-primary/10 text-primary bg-success/10 text-success bg-danger/10 text-danger -->
+            @auth
+                <div x-data="{
+                        open: false,
+                        notifications: [],
+                        unreadCount: 0,
+                        async load() {
+                            const res = await fetch('{{ route('notifications.index') }}');
+                            const data = await res.json();
+                            this.notifications = data.notifications;
+                            this.unreadCount = data.unread_count;
+                        },
+                        async markRead(id, url) {
+                            await fetch(`/notifications/${id}/read`, {
+                                method: 'PATCH',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                    'Content-Type': 'application/json',
+                                },
+                            });
+                            window.location.href = url;
+                        }
+                     }" x-init="load(); setInterval(() => load(), 30000)" class="relative">
+                    <button @click="open = !open; if (open) load()"
+                        class="relative w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10 dark:text-gray-300">
+                        <i class="ri-notification-3-line text-lg"></i>
+                        <span x-show="unreadCount > 0" x-text="unreadCount > 9 ? '9+' : unreadCount" x-cloak
+                            class="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 rounded-full bg-danger text-white text-[10px] font-bold flex items-center justify-center"></span>
+                    </button>
+
+                    <div x-show="open" x-cloak @click.outside="open = false" x-transition
+                        class="absolute right-0 mt-2 w-80 bg-white dark:bg-[#252B3E] rounded-xl shadow-lg border border-gray-100 dark:border-white/5 overflow-hidden z-50">
+                        <div class="p-3 border-b border-gray-100 dark:border-white/5 font-heading font-semibold text-sm">
+                            Notifications
+                        </div>
+                        <div class="max-h-80 overflow-y-auto divide-y divide-gray-100 dark:divide-white/5">
+                            <template x-for="n in notifications" :key="n.id">
+                                <button @click="markRead(n.id, n.data.url)"
+                                    class="w-full text-left p-3 flex gap-3 hover:bg-gray-50 dark:hover:bg-white/5"
+                                    :class="!n.read_at ? 'bg-primary/5' : ''">
+                                    <span class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                                        :class="n.data.color === 'success' ? 'bg-success/10 text-success' : (n.data.color === 'danger' ? 'bg-danger/10 text-danger' : 'bg-primary/10 text-primary')">
+                                        <i :class="n.data.icon"></i>
+                                    </span>
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-medium truncate" x-text="n.data.title"></p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 truncate"
+                                            x-text="n.data.message">
+                                        </p>
+                                    </div>
+                                </button>
+                            </template>
+                            <template x-if="notifications.length === 0">
+                                <p class="p-4 text-sm text-gray-400 text-center">No notifications yet.</p>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            @endauth
+
             <button @click="
                     document.documentElement.classList.toggle('dark');
                     localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
