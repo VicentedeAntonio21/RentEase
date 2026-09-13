@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use App\Models\Unit;
+use Illuminate\Http\Request;
 
 class WelcomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $stats = [
             'available_units' => Unit::available()->count(),
@@ -15,6 +16,15 @@ class WelcomeController extends Controller
             'cities' => Property::distinct('city')->count('city'),
         ];
 
-        return view('landing', compact('stats'));
+        $city = $request->input('city');
+
+        $featuredUnits = Unit::available()
+            ->inCity($city)
+            ->with('property.images')
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('landing', compact('stats', 'featuredUnits', 'city'));
     }
 }

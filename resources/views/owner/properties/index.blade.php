@@ -28,27 +28,27 @@
                 </a>
             </div>
         @else
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($properties as $property)
                     <div class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
 
                         <a href="{{ route('owner.properties.show', $property) }}" class="block relative h-36 bg-gray-100 dark:bg-white/5">
                             @if ($property->images->count())
-                                <img src="{{ Storage::url($property->images->first()->image_path) }}" class="h-full w-full object-cover">
+                                <img src="{{ rtrim(request()->getBasePath(), '/') . '/storage/' . ltrim($property->images->first()->image_path, '/') }}" class="h-full w-full object-cover" alt="{{ $property->title }} photo">
                             @else
                                 <div class="h-full w-full flex items-center justify-center text-gray-300 dark:text-gray-600">
                                     <i class="ri-image-line text-3xl"></i>
                                 </div>
                             @endif
-                            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium bg-white/95 dark:bg-[#1E2235]/95 capitalize">
+                                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium bg-white/95 dark:bg-[#1E2235]/95 capitalize">
                                 {{ $property->property_type }}
-                            </span>
+                                </span>
                         </a>
 
                         <div class="p-4">
-                            <a href="{{ route('owner.properties.show', $property) }}" class="font-heading font-semibold hover:text-primary">
+                            <h2 class="font-heading font-semibold truncate" title="{{ $property->title }}">
                                 {{ $property->title }}
-                            </a>
+                            </h2>
                             <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-0.5">
                                 <i class="ri-map-pin-line"></i> {{ $property->city }}
                             </p>
@@ -56,20 +56,40 @@
                                 <i class="ri-door-line"></i> {{ $property->units->count() }} {{ Str::plural('unit', $property->units->count()) }}
                             </p>
 
+
                             <div class="flex items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
+                                <a href="{{ route('owner.properties.units.create', $property) }}"
+                                    class="flex-1 text-center px-3 py-1.5 text-sm font-medium bg-primary/10 text-primary rounded-lg hover:bg-primary/20 flex items-center justify-center gap-1">
+                                    <i class="ri-add-line"></i> Unit
+                                </a>
+
                                 <a href="{{ route('owner.properties.edit', $property) }}"
-                                   class="flex-1 text-center px-3 py-1.5 text-sm font-medium border border-gray-200 dark:border-white/10 rounded-lg text-gray-600 dark:text-gray-300 hover:border-primary hover:text-primary">
+                                    class="flex-1 text-center px-3 py-1.5 text-sm font-medium border border-gray-200 dark:border-white/10 rounded-lg text-gray-600 dark:text-gray-300 hover:border-primary hover:text-primary">
                                     Edit
                                 </a>
-                                <form action="{{ route('owner.properties.destroy', $property) }}" method="POST"
-                                      onsubmit="return confirm('Delete this property and all its units?');" class="flex-1">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="w-full px-3 py-1.5 text-sm font-medium border border-danger/20 rounded-lg text-danger hover:bg-danger/10">
-                                        Delete
-                                    </button>
-                                </form>
+
+                                <button
+                                    type="button"
+                                    x-data=""
+                                    x-on:click="$dispatch('open-modal', 'delete-property-{{ $property->id }}')"
+                                    class="flex-1 px-3 py-1.5 text-sm font-medium border border-danger/20 rounded-lg text-danger hover:bg-danger/10">
+                                    Delete
+                                </button>
+
+                                <x-confirm-modal
+                                    name="delete-property-{{ $property->id }}"
+                                    title="Delete this property?"
+                                    message="This will permanently remove '{{ $property->title }}' along with all its units and applications. This cannot be undone."
+                                    confirm-text="Delete Property"
+                                >
+                                    <form action="{{ route('owner.properties.destroy', $property) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-4 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-red-600">
+                                            Delete Property
+                                        </button>
+                                    </form>
+                                </x-confirm-modal>
                             </div>
                         </div>
                     </div>

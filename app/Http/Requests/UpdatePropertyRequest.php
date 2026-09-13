@@ -21,8 +21,8 @@ class UpdatePropertyRequest extends FormRequest
             'province' => ['nullable', 'string', 'max:100'],
             'zip_code' => ['nullable', 'string', 'max:20'],
             'property_type' => ['required', 'in:apartment,house,condo,room,other'],
-            'images' => ['nullable', 'array'],
-            'images.*' => ['image', 'max:2048'],
+            'images' => ['nullable', 'array', 'max:6'],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 }

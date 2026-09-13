@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Owner\ReportController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\Api\AddressController;
 
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
@@ -55,6 +56,12 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/properties', [AdminPropertyController::class, 'index'])->name('properties.index');
     Route::delete('/properties/{property}', [AdminPropertyController::class, 'destroy'])->name('properties.destroy');
     Route::get('/applications', [AdminApplicationController::class, 'index'])->name('applications.index');
+});
+
+Route::prefix('api/address')->group(function () {
+    Route::get('/provinces', [AddressController::class, 'provinces']);
+    Route::get('/cities/{provinceId}', [AddressController::class, 'cities']);
+    Route::get('/barangays/{cityId}', [AddressController::class, 'barangays']);
 });
 
 require __DIR__.'/auth.php';

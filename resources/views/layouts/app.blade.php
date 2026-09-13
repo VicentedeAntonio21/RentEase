@@ -45,10 +45,11 @@
         ]"
         class="fixed inset-y-0 left-0 z-40 w-64 bg-sidebar text-gray-300 transform transition-all duration-200 ease-in-out overflow-y-auto overflow-x-hidden">
 
-        <div class="h-16 flex items-center gap-2 px-6 border-b border-white/10 whitespace-nowrap">
-            <i class="ri-home-4-fill text-primary text-2xl shrink-0"></i>
+        <a href="{{ route('dashboard') }}"
+            class="h-16 flex items-center gap-2 px-6 border-b border-white/10 whitespace-nowrap hover:bg-sidebar-hover transition-colors">
+            <img src="{{ asset('images/rentease-icon-square.png') }}" alt="RentEase" class="w-8 h-8 shrink-0">
             <span x-show="!collapsed" class="font-heading font-bold text-lg text-white">RentEase</span>
-        </div>
+        </a>
 
         <nav class="px-3 py-4 space-y-1">
             <x-sidebar-link href="{{ route('listings.index') }}" icon="ri-search-line"
@@ -174,10 +175,39 @@
     <!-- Page content -->
     <main :class="collapsed ? 'lg:ml-20' : 'lg:ml-64'"
         class="pt-16 min-h-screen transition-all duration-200 ease-in-out">
-        <div class="p-4 lg:p-6">
+        <div class="p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto">
             {{ $slot }}
         </div>
     </main>
+
+    <!-- Global image lightbox -->
+    <div x-show="$store.lightbox.open" x-cloak @click="$store.lightbox.close()"
+        @keydown.escape.window="$store.lightbox.close()" @keydown.arrow-right.window="$store.lightbox.next()"
+        @keydown.arrow-left.window="$store.lightbox.prev()" x-transition.opacity
+        class="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
+        <button @click.stop="$store.lightbox.close()"
+            class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 text-2xl">
+            <i class="ri-close-line"></i>
+        </button>
+
+        <button x-show="$store.lightbox.images.length > 1" @click.stop="$store.lightbox.prev()"
+            class="absolute left-4 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 text-3xl">
+            <i class="ri-arrow-left-s-line"></i>
+        </button>
+
+        <img :src="$store.lightbox.images[$store.lightbox.index]" @click.stop
+            class="max-h-[85vh] max-w-full rounded-lg object-contain shadow-2xl">
+
+        <button x-show="$store.lightbox.images.length > 1" @click.stop="$store.lightbox.next()"
+            class="absolute right-4 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 text-3xl">
+            <i class="ri-arrow-right-s-line"></i>
+        </button>
+
+        <div x-show="$store.lightbox.images.length > 1"
+            class="absolute bottom-6 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-medium"
+            x-text="`${$store.lightbox.index + 1} / ${$store.lightbox.images.length}`">
+        </div>
+    </div>
 
     @stack('scripts')
 </body>

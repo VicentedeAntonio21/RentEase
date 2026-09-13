@@ -1,29 +1,46 @@
 <x-app-layout>
     @section('title', $unit->property->title)
 
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="max-w-5xl mx-auto space-y-6">
 
         <!-- Back link -->
         <a href="{{ url()->previous() === url()->current() ? route('listings.index') : url()->previous() }}"
-           class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary">
+            class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary">
             <i class="ri-arrow-left-line"></i> Back to listings
         </a>
 
         <!-- Image gallery -->
         @if ($unit->property->images->count())
+            @php
+                $imageUrls = $unit->property->images->map(fn($img) => Storage::url($img->image_path));
+            @endphp
             <div class="grid grid-cols-3 gap-2 rounded-xl overflow-hidden">
-                @foreach ($unit->property->images->take(3) as $image)
-                    <img src="{{ Storage::url($image->image_path) }}"
-                         class="h-56 w-full object-cover {{ $loop->first ? 'col-span-3 sm:col-span-1' : '' }}">
+                @foreach ($unit->property->images->take(3) as $index => $image)
+                    <div class="relative group cursor-pointer {{ $loop->first ? 'col-span-3 sm:col-span-1' : '' }}"
+                        @click="$store.lightbox.show(@js($imageUrls), {{ $index }})">
+                        <img src="{{ Storage::url($image->image_path) }}" class="h-56 w-full object-cover">
+                        <div
+                            class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                            <i
+                                class="ri-zoom-in-line text-white text-2xl opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </div>
+                        @if ($loop->last && $unit->property->images->count() > 3)
+                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                <span class="text-white font-semibold">+{{ $unit->property->images->count() - 3 }} more</span>
+                            </div>
+                        @endif
+                    </div>
                 @endforeach
             </div>
         @else
-            <div class="h-56 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-300 dark:text-gray-600">
+            <div
+                class="h-56 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-300 dark:text-gray-600">
                 <i class="ri-image-line text-5xl"></i>
             </div>
         @endif
 
-        <div class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-6 space-y-5">
+        <div
+            class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-6 space-y-5">
 
             <!-- Header -->
             <div class="flex items-start justify-between gap-4">
@@ -41,8 +58,8 @@
 
                 <span class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium
                     {{ $unit->status === 'available'
-                        ? 'bg-success/10 text-success'
-                        : 'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400' }}">
+    ? 'bg-success/10 text-success'
+    : 'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400' }}">
                     {{ ucfirst($unit->status) }}
                 </span>
             </div>
@@ -80,7 +97,8 @@
 
             <!-- Owner -->
             <div class="flex items-center gap-3 pt-2">
-                <span class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-heading font-semibold">
+                <span
+                    class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-heading font-semibold">
                     {{ strtoupper(substr($unit->property->owner->name, 0, 1)) }}
                 </span>
                 <div>
@@ -94,10 +112,10 @@
                 @auth
                     @if (auth()->user()->isTenant() && $unit->status === 'available')
                         <a href="{{ route('applications.create', $unit) }}"
-                           class="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-medium text-sm hover:bg-primary-dark">
+                            class="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-medium text-sm hover:bg-primary-dark">
                             <i class="ri-file-add-line"></i> Apply / Reserve This Unit
                         </a>
-                    @elseif (! auth()->user()->isTenant())
+                    @elseif (!auth()->user()->isTenant())
                         <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
                             <i class="ri-information-line"></i> Only tenant accounts can apply.
                         </p>
@@ -108,7 +126,7 @@
                     @endif
                 @else
                     <a href="{{ route('login') }}"
-                       class="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-medium text-sm hover:bg-primary-dark">
+                        class="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg font-medium text-sm hover:bg-primary-dark">
                         <i class="ri-login-box-line"></i> Log in to Apply
                     </a>
                 @endauth

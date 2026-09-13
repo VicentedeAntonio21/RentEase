@@ -27,7 +27,7 @@ class ApplicationController extends Controller
      */
     public function create(Unit $unit)
     {
-        abort_if(! Auth::user()->isTenant(), 403, 'Only tenants can apply.');
+        abort_if(!Auth::user()->isTenant(), 403, 'Only tenants can apply.');
         abort_if($unit->status !== 'available', 403, 'This unit is not available.');
 
         return view('applications.create', compact('unit'));
@@ -38,11 +38,20 @@ class ApplicationController extends Controller
      */
     public function store(Request $request, Unit $unit)
     {
-        abort_if(! Auth::user()->isTenant(), 403, 'Only tenants can apply.');
+        abort_if(!Auth::user()->isTenant(), 403, 'Only tenants can apply.');
         abort_if($unit->status !== 'available', 403, 'This unit is not available.');
 
+        $alreadyApplied = Auth::user()->applications()
+            ->where('unit_id', $unit->id)
+            ->where('status', 'pending')
+            ->exists();
+
+        if ($alreadyApplied) {
+            return back()->with('error', 'You already have a pending application for this unit.');
+        }
+
         $validated = $request->validate([
-            'move_in_date' => ['required', 'date', 'after_or_equal:today'],
+            'move_in_date' => ['required', 'date', 'after_or_equal:today', 'before:' . now()->addYear()->toDateString()],
             'message' => ['nullable', 'string', 'max:1000'],
         ]);
 

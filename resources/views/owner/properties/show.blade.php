@@ -1,9 +1,10 @@
 <x-app-layout>
     @section('title', $property->title)
 
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="max-w-5xl mx-auto space-y-6">
 
-        <a href="{{ route('owner.properties.index') }}" class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary">
+        <a href="{{ route('owner.properties.index') }}"
+            class="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary">
             <i class="ri-arrow-left-line"></i> Back to properties
         </a>
 
@@ -14,17 +15,19 @@
         @endif
 
         <!-- Property info card -->
-        <div class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
+        <div
+            class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
             <div class="p-6 flex items-start justify-between gap-4">
                 <div>
-                    <p class="text-xs font-medium text-primary uppercase tracking-wide">{{ $property->property_type }}</p>
+                    <p class="text-xs font-medium text-primary uppercase tracking-wide">{{ $property->property_type }}
+                    </p>
                     <h1 class="font-heading text-xl font-bold mt-1">{{ $property->title }}</h1>
                     <p class="text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
                         <i class="ri-map-pin-line"></i> {{ $property->address }}, {{ $property->city }}
                     </p>
                 </div>
                 <a href="{{ route('owner.properties.edit', $property) }}"
-                   class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg text-sm font-medium hover:border-primary hover:text-primary">
+                    class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 border border-gray-200 dark:border-white/10 rounded-lg text-sm font-medium hover:border-primary hover:text-primary">
                     <i class="ri-edit-line"></i> Edit
                 </a>
             </div>
@@ -34,20 +37,30 @@
             @endif
 
             @if ($property->images->count())
+                @php
+                    $imageUrls = $property->images->map(fn($img) => Storage::url($img->image_path));
+                @endphp
                 <div class="grid grid-cols-4 gap-2 px-6 pb-6">
-                    @foreach ($property->images as $image)
-                        <img src="{{ Storage::url($image->image_path) }}" class="rounded-lg h-24 w-full object-cover">
+                    @foreach ($property->images as $index => $image)
+                        <div class="relative group cursor-pointer" @click="$store.lightbox.show(@js($imageUrls), {{ $index }})">
+                            <img src="{{ Storage::url($image->image_path) }}" class="rounded-lg h-24 w-full object-cover">
+                            <div
+                                class="absolute inset-0 rounded-lg bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                <i class="ri-zoom-in-line text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
             @endif
         </div>
 
         <!-- Units -->
-        <div class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
+        <div
+            class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
             <div class="p-5 flex items-center justify-between border-b border-gray-100 dark:border-white/5">
                 <h2 class="font-heading font-semibold">Units</h2>
                 <a href="{{ route('owner.properties.units.create', $property) }}"
-                   class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark">
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark">
                     <i class="ri-add-line"></i> Add Unit
                 </a>
             </div>
@@ -56,7 +69,8 @@
                 @forelse ($property->units as $unit)
                     <div class="p-5 flex items-center justify-between gap-4">
                         <div class="flex items-center gap-3">
-                            <span class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                            <span
+                                class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
                                 <i class="ri-door-line"></i>
                             </span>
                             <div>
@@ -70,25 +84,35 @@
 
                         <div class="flex items-center gap-3 shrink-0">
                             <span class="px-2.5 py-1 rounded-full text-xs font-medium
-                                @class([
-                                    'bg-success/10 text-success' => $unit->status === 'available',
-                                    'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400' => $unit->status === 'occupied',
-                                    'bg-warning/10 text-warning' => $unit->status === 'maintenance',
-                                ])">
+                                        @class([
+                                            'bg-success/10 text-success' => $unit->status === 'available',
+                                            'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400' => $unit->status === 'occupied',
+                                            'bg-warning/10 text-warning' => $unit->status === 'maintenance',
+                                        ])">
                                 {{ ucfirst($unit->status) }}
                             </span>
 
                             <a href="{{ route('owner.units.edit', $unit) }}" class="text-gray-400 hover:text-primary">
                                 <i class="ri-edit-line text-lg"></i>
                             </a>
-                            <form action="{{ route('owner.units.destroy', $unit) }}" method="POST"
-                                  onsubmit="return confirm('Delete this unit?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-gray-400 hover:text-danger">
-                                    <i class="ri-delete-bin-line text-lg"></i>
-                                </button>
-                            </form>
+                            <button type="button" x-data=""
+                                x-on:click="$dispatch('open-modal', 'delete-unit-{{ $unit->id }}')"
+                                class="text-gray-400 hover:text-danger">
+                                <i class="ri-delete-bin-line text-lg"></i>
+                            </button>
+
+                            <x-confirm-modal name="delete-unit-{{ $unit->id }}" title="Delete this unit?"
+                                message="This will permanently remove '{{ $unit->unit_name }}' and any applications submitted for it."
+                                confirm-text="Delete Unit">
+                                <form action="{{ route('owner.units.destroy', $unit) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-red-600">
+                                        Delete Unit
+                                    </button>
+                                </form>
+                            </x-confirm-modal>
                         </div>
                     </div>
                 @empty

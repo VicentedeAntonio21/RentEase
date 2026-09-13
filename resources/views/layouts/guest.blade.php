@@ -38,10 +38,10 @@
             <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-primary/20"></div>
             <div class="absolute -right-10 bottom-0 w-64 h-64 rounded-full bg-primary/10"></div>
             <div class="absolute left-1/4 top-1/3 w-40 h-40 rounded-full bg-primary/10 blur-2xl"></div>
-            <div class="relative flex items-center gap-2">
-                <i class="ri-home-4-fill text-primary text-3xl"></i>
-                <span class="font-heading font-bold text-xl">RentEase</span>
-            </div>
+            <a href="{{ auth()->check() ? route('dashboard') : route('home') }}"
+                class="relative flex items-center gap-2">
+                <img src="{{ asset('images/rentease-logo-full.png') }}" alt="RentEase" class="h-10 w-auto">
+            </a>
 
             <div class="relative">
                 <h1 class="font-heading text-3xl font-bold leading-tight">
@@ -79,10 +79,9 @@
             </button>
 
             <!-- Mobile-only logo -->
-            <div class="lg:hidden flex items-center gap-2 mb-8">
-                <i class="ri-home-4-fill text-primary text-3xl"></i>
-                <span class="font-heading font-bold text-xl">RentEase</span>
-            </div>
+            <a href="{{ auth()->check() ? route('dashboard') : route('home') }}" class="lg:hidden mb-8 block">
+                <img src="{{ asset('images/rentease-logo-full.png') }}" alt="RentEase" class="h-10 w-auto">
+            </a>
 
             <div class="w-full max-w-sm">
                 {{ $slot }}

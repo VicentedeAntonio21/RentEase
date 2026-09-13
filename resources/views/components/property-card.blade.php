@@ -3,7 +3,7 @@
 
     <div class="relative h-44 bg-gray-100 dark:bg-white/5">
         @if ($unit->property->images->count())
-            <img src="{{ Storage::url($unit->property->images->first()->image_path) }}"
+            <img src="{{ rtrim(request()->getBasePath(), '/') . '/storage/' . ltrim($unit->property->images->first()->image_path, '/') }}"
                  class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300">
         @else
             <div class="h-full w-full flex items-center justify-center text-gray-300 dark:text-gray-600">

@@ -9,7 +9,8 @@
             </div>
         @endif
 
-        <div class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
+        <div
+            class="bg-white dark:bg-[#252B3E] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-gray-50 dark:bg-white/5 text-left text-gray-500 dark:text-gray-400">
@@ -27,7 +28,8 @@
                             <tr>
                                 <td class="p-4">
                                     <div class="flex items-center gap-3">
-                                        <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-heading font-semibold text-xs shrink-0">
+                                        <span
+                                            class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-heading font-semibold text-xs shrink-0">
                                             {{ strtoupper(substr($user->name, 0, 1)) }}
                                         </span>
                                         <div>
@@ -38,27 +40,37 @@
                                 </td>
                                 <td class="p-4">
                                     <span class="px-2.5 py-1 rounded-full text-xs font-medium capitalize
-                                        @class([
-                                            'bg-primary/10 text-primary' => $user->role === 'admin',
-                                            'bg-success/10 text-success' => $user->role === 'owner',
-                                            'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400' => $user->role === 'tenant',
-                                        ])">
+                                            @class([
+                                                'bg-primary/10 text-primary' => $user->role === 'admin',
+                                                'bg-success/10 text-success' => $user->role === 'owner',
+                                                'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400' => $user->role === 'tenant',
+                                            ])">
                                         {{ $user->role }}
                                     </span>
                                 </td>
                                 <td class="p-4 text-gray-500 dark:text-gray-400">{{ $user->properties_count }}</td>
                                 <td class="p-4 text-gray-500 dark:text-gray-400">{{ $user->applications_count }}</td>
-                                <td class="p-4 text-gray-500 dark:text-gray-400">{{ $user->created_at->format('M d, Y') }}</td>
+                                <td class="p-4 text-gray-500 dark:text-gray-400">{{ $user->created_at->format('M d, Y') }}
+                                </td>
                                 <td class="p-4">
                                     @if ($user->id !== auth()->id())
-                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                              onsubmit="return confirm('Delete this user? This cannot be undone.');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="text-gray-400 hover:text-danger">
-                                                <i class="ri-delete-bin-line text-lg"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" x-data=""
+                                            x-on:click="$dispatch('open-modal', 'delete-user-{{ $user->id }}')"
+                                            class="text-gray-400 hover:text-danger">
+                                            <i class="ri-delete-bin-line text-lg"></i>
+                                        </button>
+
+                                        <x-confirm-modal name="delete-user-{{ $user->id }}" title="Delete this user?"
+                                            :message="'This will permanently remove ' . $user->name . ' (' . $user->email . ') and all their properties or applications.'" confirm-text="Delete User">
+                                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="px-4 py-2 bg-danger text-white rounded-lg text-sm font-medium hover:bg-red-600">
+                                                    Delete User
+                                                </button>
+                                            </form>
+                                        </x-confirm-modal>
                                     @endif
                                 </td>
                             </tr>

@@ -49,10 +49,10 @@ class UnitController extends Controller
 
         $validated = $request->validate([
             'unit_name' => ['required', 'string', 'max:255'],
-            'rent_price' => ['required', 'numeric', 'min:0'],
-            'bedrooms' => ['required', 'integer', 'min:0'],
-            'bathrooms' => ['required', 'integer', 'min:0'],
-            'area_sqm' => ['nullable', 'numeric', 'min:0'],
+            'rent_price' => ['required', 'numeric', 'min:0', 'max:9999999.99'],
+            'bedrooms' => ['required', 'integer', 'min:0', 'max:20'],
+            'bathrooms' => ['required', 'integer', 'min:0', 'max:20'],
+            'area_sqm' => ['nullable', 'numeric', 'min:0', 'max:99999'],
             'status' => ['required', 'in:available,occupied,maintenance'],
         ]);
 

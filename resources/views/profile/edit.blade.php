@@ -1,7 +1,7 @@
 <x-app-layout>
     @section('title', 'Profile Settings')
 
-    <div class="max-w-2xl mx-auto space-y-6">
+    <div class="max-w-3xl mx-auto space-y-6">
 
         <div class="flex items-center gap-4">
             <span class="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center font-heading font-bold text-2xl">

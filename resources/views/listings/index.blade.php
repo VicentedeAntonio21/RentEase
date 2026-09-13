@@ -71,7 +71,7 @@
         </div>
 
         <!-- Results grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @forelse ($units as $unit)
                 <div class="animate-fade-in-up" style="animation-delay: {{ min($loop->index * 0.05, 0.4) }}s">
                     <x-property-card :unit="$unit" />
